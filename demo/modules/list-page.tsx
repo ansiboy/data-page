@@ -2,6 +2,7 @@ import { DataSource } from "maishu-wuzhui";
 import { DataListPage } from "../../out/index";
 import { rules } from "maishu-dilu-react";
 import { guid } from "maishu-toolkit";
+// import "./list-page.scss";
 
 interface Person {
     id: string,
@@ -34,9 +35,12 @@ let dataSource = new DataSource<Person>({
 
 export default class extends DataListPage<Person> {
     dataSource = dataSource;
+    headerFixed = true;
+    showCommandColumn = true;
     columns = [
         this.boundField({
             dataField: "firstName", headerText: "名",
+            // itemStyle: { width: "200px" },
             validateRules: [rules.required("Please input first name.")]
         }),
         this.boundField({
@@ -45,7 +49,7 @@ export default class extends DataListPage<Person> {
         })
     ]
 
-    constructor(props) {
+    constructor(props: DataListPage<Person>["props"]) {
         super(props);
 
 

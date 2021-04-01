@@ -11,6 +11,7 @@ import { InputControl, InputControlProps } from "./inputs/input-control";
 import { PageDataSource } from "./page-data-source";
 import { PageProps } from "maishu-chitu-react";
 import { buttonOnClick, confirm } from "maishu-ui-toolkit";
+import { classNames } from "./style";
 
 interface BoundInputControlProps<T> extends InputControlProps<T> {
     boundField: BoundField<T>
@@ -97,6 +98,25 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     constructor(props: P) {
         super(props);
 
+        if (this.showCommandColumn) {
+            let it = this;
+            this.commandColumn = new CustomField<T>({
+                headerText: "操作",
+                headerStyle: { textAlign: "center", width: `${this.CommandColumnWidth}px` },
+                itemStyle: { textAlign: "center", width: `${this.CommandColumnWidth}px` },
+                createItemCell(dataItem: T, cellElement) {
+                    let cell = new GridViewCell(cellElement);
+                    ReactDOM.render(<>
+                        {it.leftCommands(dataItem)}
+                        {it.editButton(dataItem)}
+                        {it.deleteButton(dataItem)}
+                        {it.rightCommands(dataItem)}
+                    </>, cell.element);
+                    return cell;
+                }
+            });
+        }
+
         window.addEventListener("resize", () => {
             let height = window.innerHeight - 160;
             let width = window.innerWidth - 80;
@@ -136,25 +156,6 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
 
     componentDidMount() {
         this.columns = this.columns || [];
-
-        if (this.showCommandColumn) {
-            let it = this;
-            this.commandColumn = new CustomField<T>({
-                headerText: "操作",
-                headerStyle: { textAlign: "center", width: `${this.CommandColumnWidth}px` },
-                itemStyle: { textAlign: "center", width: `${this.CommandColumnWidth}px` },
-                createItemCell(dataItem: T, cellElement) {
-                    let cell = new GridViewCell(cellElement);
-                    ReactDOM.render(<>
-                        {it.leftCommands(dataItem)}
-                        {it.editButton(dataItem)}
-                        {it.deleteButton(dataItem)}
-                        {it.rightCommands(dataItem)}
-                    </>, cell.element);
-                    return cell;
-                }
-            });
-        }
         createGridView({
             element: this.itemTable,
             dataSource: this.dataSource,
@@ -162,6 +163,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
             pageSize: this.pageSize,
             translate: this.translate,
             showHeader: this.headerFixed != true,
+            showPagingBar: false,
         })
     }
 
@@ -300,31 +302,30 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
         if (this.headerFixed) {
             let columns = this.columns || [];
             return <>
-                <div style={{ height: `${tableSize.height}px`, width: `${tableSize.width}px`, overflowY: "scroll", overflowX: "hidden" }}>
-                    <table className="table table-striped table-bordered table-hover" style={{ margin: 0 }}>
-                        <thead>
-                            <tr>
-                                {columns.map((col, i) =>
-                                    <th key={i} ref={e => {
-                                        if (!e) return;
-                                        if (!col.itemStyle)
-                                            return;
+                <table className="table table-striped table-bordered table-hover" style={{ margin: 0 }}>
+                    <thead>
+                        <tr>
+                            {columns.map((col, i) =>
+                                <th key={i} ref={e => {
+                                    if (!e) return;
+                                    if (!col.itemStyle)
+                                        return;
 
-                                        e.style.width = col.itemStyle["width"] || "";
-                                        if (this.commandColumn == null && i == columns.length - 1) {
-                                            e.style.width = `calc(${e.style.width} + ${this.ScrollBarWidth}px)`
-                                        }
+                                    e.style.width = col.itemStyle["width"] || "";
+                                    if (this.commandColumn == null && i == columns.length - 1) {
+                                        e.style.width = `calc(${e.style.width} + ${this.ScrollBarWidth}px)`
+                                    }
 
-                                    }}>{col.headerText}</th>
-                                )}
-                                {this.commandColumn ? <th style={{ width: this.CommandColumnWidth + this.ScrollBarWidth }}>
-                                    {this.commandColumn.headerText}
-                                </th> : null}
-                            </tr>
-                        </thead>
-                    </table>
+                                }}>{col.headerText}</th>
+                            )}
+                            {this.commandColumn ? <th style={{ width: this.CommandColumnWidth + this.ScrollBarWidth }}>
+                                {this.commandColumn.headerText}
+                            </th> : null}
+                        </tr>
+                    </thead>
+                </table>
+                <div className={classNames.tableWrapper} style={{ height: `${tableSize.height}px`, width: `${tableSize.width}px` }}>
                     <table ref={e => this.itemTable = e || this.itemTable}>
-
                     </table>
                 </div>
             </>
