@@ -98,7 +98,7 @@ export function createItemDialog<T>
         setDataItem(dataItem: T) {
             this.dataItem = dataItem;
             let primaryValues = (dataSource.primaryKeys || []).map(key => dataItem[key]).filter(o => o);
-            let title = primaryValues.length > 0 ? `修改${name}` : `添加${name}`;
+            let title = primaryValues.length > 0 ? `${strings.modify}${name}` : `${strings.add}${name}`;
 
             this.inputControls.forEach(c => {
                 let value = dataItem[c.props.dataField];

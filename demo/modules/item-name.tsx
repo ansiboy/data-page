@@ -2,8 +2,9 @@ import { DataListPage } from "../../out/index";
 import { rules } from "maishu-dilu-react";
 import { createDataSource, Person } from "../data-source";
 
-export default class extends DataListPage<Person> {
+export default class extends DataListPage<Person>{
     dataSource = createDataSource();
+    itemName = "人员";
     columns = [
         this.boundField({
             dataField: "firstName", headerText: "名",
@@ -15,11 +16,4 @@ export default class extends DataListPage<Person> {
             validateRules: [rules.required("Please input last name.")]
         })
     ]
-
-    constructor(props: DataListPage<Person>["props"]) {
-        super(props);
-    }
 }
-
-
-
