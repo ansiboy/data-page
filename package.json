@@ -1,0 +1,23 @@
+{
+    "name": "maishu-data-page",
+    "version": "1.0.0",
+    "dependencies": {
+        "maishu-chitu-react": "^1.30.0",
+        "maishu-dilu-react": "^1.4.0",
+        "maishu-wuzhui-helper": "^1.9.5",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2"
+    },
+    "devDependencies": {
+        "@babel/plugin-syntax-typescript": "^7.12.13",
+        "@babel/plugin-transform-modules-amd": "^7.13.0",
+        "@babel/plugin-transform-typescript": "^7.13.0",
+        "@babel/preset-env": "^7.13.12",
+        "@types/react": "^17.0.3",
+        "@types/react-dom": "^17.0.3",
+        "maishu-admin-scaffold": "^1.5.0",
+        "maishu-node-mvc": "^2.18.2",
+        "maishu-toolkit": "^1.6.6",
+        "webpack": "^5.28.0"
+    }
+}
