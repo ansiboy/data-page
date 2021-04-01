@@ -12,7 +12,9 @@ module.exports = {
     devtool: 'source-map',
     externals: [
         'react', 'react-dom', 'less', 'lessjs',
+        'maishu-admin-scaffold',
         'maishu-chitu', 'maishu-chitu-react', 'maishu-dilu', 'maishu-dilu-react',
+        'maishu-node-mvc',
         'maishu-toolkit', 'maishu-ui-toolkit',
         'maishu-wuzhui', 'maishu-wuzhui-helper',
     ],
