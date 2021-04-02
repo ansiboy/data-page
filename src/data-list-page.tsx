@@ -2,7 +2,7 @@ import { BasePage } from "./base-page";
 import {
     DataSource, DataControlField, CustomField, GridViewCell, GridViewEditableCell,
     BoundField, GridViewCellControl, createGridView, boundField, BoundFieldParams,
-    dateTimeField, CheckboxListFieldParams, checkboxListField
+    dateTimeField, CheckboxListFieldParams, checkboxListField, GridView
 } from "maishu-wuzhui-helper";
 import * as React from "react";
 import { createItemDialog, Dialog } from "./item-dialog";
@@ -89,6 +89,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     //============================================
 
     protected deleteConfirmText: (dataItem: T) => string;
+    protected gridView: GridView<T>;
 
 
     private itemTable: HTMLTableElement;
@@ -156,14 +157,13 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
 
     componentDidMount() {
         this.columns = this.columns || [];
-        createGridView({
+        this.gridView = createGridView({
             element: this.itemTable,
             dataSource: this.dataSource,
             columns: this.commandColumn ? [...this.columns, this.commandColumn] : this.columns,
             pageSize: this.pageSize,
             translate: this.translate,
             showHeader: this.headerFixed != true,
-            showPagingBar: false,
         })
     }
 
@@ -173,7 +173,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
                 <div key={i} className="form-group clearfix input-control">
                     <label>{col.headerText}</label>
                     <BoundFieldControl boundField={col as BoundField<any>} dataField={(col as BoundField<any>).dataField}
-                        validateRules={(col as BoundField<T>).validateRules} />
+                        validation={(col as BoundField<T>).validation} />
                 </div>
             )}
         </>

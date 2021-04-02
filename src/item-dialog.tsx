@@ -133,7 +133,9 @@ export function createItemDialog<T>
 
         componentDidMount() {
             let ctrls = this.inputControls;
-            let validateFields = ctrls.filter(o => o.props.validateRules).map(o => ({ name: o.props.dataField as string, rules: o.props.validateRules || [] }));
+            let validateFields = ctrls.filter(o => o.props.validation)
+                .map(o => Object.assign({ name: o.props.dataField }, o.props.validation));
+
             this.validator = new FormValidator(this.fieldsConatiner, ...validateFields);
         }
 

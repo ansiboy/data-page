@@ -10,11 +10,18 @@ export default class extends DataListPage<Person> {
         this.boundField({
             dataField: "firstName", headerText: "名",
             // itemStyle: { width: "200px" },
-            validateRules: [rules.required("Please input first name.")]
+            validation: {
+                rules: [rules.required("Please input first name.")],
+                condition: (input, form, validator) => {
+                    return false;
+                }
+            }
         }),
         this.boundField({
             dataField: "lastName", headerText: "姓",
-            validateRules: [rules.required("Please input last name.")]
+            validation: {
+                rules: [rules.required("Please input last name.")]
+            }
         })
     ]
 

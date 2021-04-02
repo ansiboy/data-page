@@ -1,10 +1,15 @@
 {
     "name": "maishu-data-page",
-    "version": "1.0.0",
+    "version": "1.0.6",
+    "main": "dist/index.min.js",
+    "types": "src/index.ts",
     "dependencies": {
         "maishu-chitu-react": "^1.30.0",
+        "maishu-dilu": "^1.9.2",
         "maishu-dilu-react": "^1.4.0",
-        "maishu-wuzhui-helper": "^1.9.5",
+        "maishu-toolkit": "^1.6.6",
+        "maishu-wuzhui": "^1.21.8",
+        "maishu-wuzhui-helper": "^1.9.6",
         "react": "^17.0.2",
         "react-dom": "^17.0.2"
     },
@@ -17,7 +22,6 @@
         "@types/react-dom": "^17.0.3",
         "maishu-admin-scaffold": "^1.5.0",
         "maishu-node-mvc": "^2.18.2",
-        "maishu-toolkit": "^1.6.6",
-        "webpack": "^5.28.0"
+        "webpack": "^4.30.0"
     }
 }
