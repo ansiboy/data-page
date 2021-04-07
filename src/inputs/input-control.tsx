@@ -4,7 +4,8 @@ import { BoundFieldParams } from "maishu-wuzhui-helper";
 
 export interface InputControlProps<T> {
     dataField: keyof T,
-    validation: BoundFieldParams<any>["validation"]
+    validation: BoundFieldParams<any>["validation"],
+    emptyText?: string,
 }
 
 export interface InputControlState {

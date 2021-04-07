@@ -51,6 +51,8 @@ class BoundFieldControl<T> extends InputControl<T, BoundInputControlProps<T>>{
             this.control = this.props.boundField.createControl();
             this.control.element.setAttribute("name", this.props.dataField as string);
             this.control.value = this._value;
+            if (this.props.emptyText)
+                (this.control.element as HTMLInputElement).placeholder = this.props.emptyText;
 
             this.control.element.onchange = () => {
                 this._value = this.control.value;
@@ -173,7 +175,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
                 <div key={i} className="form-group clearfix input-control">
                     <label>{col.headerText}</label>
                     <BoundFieldControl boundField={col as BoundField<any>} dataField={(col as BoundField<any>).dataField}
-                        validation={(col as BoundField<T>).validation} />
+                        validation={(col as BoundField<T>).validation} emptyText={(col as BoundField<any>).emptyText} />
                 </div>
             )}
         </>
