@@ -1,6 +1,6 @@
 {
     "name": "maishu-data-page",
-    "version": "1.0.9",
+    "version": "1.0.11",
     "main": "dist/index.min.js",
     "types": "out/index.d.ts",
     "scripts": {

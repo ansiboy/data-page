@@ -30,14 +30,18 @@ class BoundFieldControl<T> extends InputControl<T, BoundInputControlProps<T>>{
     }
 
     get value() {
-        return this._value;
+        if (this.control != null)
+            return this.control.value;
+        else
+            return this._value;
     }
 
     set value(value) {
-        this._value = value;
-
+        // this._value = value;
         if (this.control != null)
             this.control.value = value;
+        else
+            this._value = value;
     }
 
     render() {
