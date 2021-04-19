@@ -2,7 +2,7 @@ import { BasePage } from "./base-page";
 import {
     DataSource, DataControlField, CustomField, GridViewCell, GridViewEditableCell,
     BoundField, GridViewCellControl, createGridView, boundField, BoundFieldParams,
-    dateTimeField, CheckboxListFieldParams, checkboxListField, GridView
+    dateTimeField, CheckboxListFieldParams, checkboxListField, GridView, customDataField,
 } from "maishu-wuzhui-helper";
 import * as React from "react";
 import { createItemDialog, Dialog } from "./item-dialog";
@@ -349,5 +349,11 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     checkboxListField<S>(params: CheckboxListFieldParams<T, S>): BoundField<T> {
         return checkboxListField(params)
     }
+    customDataField(params: CustomeDataFieldParams<T>) {
+        return customDataField<T>(params)
+    }
+
 }
+
+type CustomeDataFieldParams<T> = Parameters<typeof customDataField>[0];
 
