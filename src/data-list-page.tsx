@@ -306,7 +306,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     render() {
         let tableSize = (this.state?.tableSize || this.calcTableSize()) as ReturnType<DataListPage<any, any>["calcTableSize"]>;
         if (this.headerFixed) {
-            let columns = this.columns || [];
+            let columns = (this.columns || []).filter(o => o.visible);
             return <>
                 <table className="table table-striped table-bordered table-hover" style={{ margin: 0 }}>
                     <thead>
