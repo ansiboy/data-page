@@ -74,6 +74,11 @@ export interface DataListPageState {
 }
 
 export abstract class DataListPage<T, P extends PageProps = PageProps, S extends DataListPageState = DataListPageState> extends BasePage<P, S> {
+
+    #itemTable: HTMLTableElement;
+    #dialog: Dialog<T>;
+    #commandColumn: CustomField<T>;
+
     /** 操作列宽度 */
     protected CommandColumnWidth = 140;
     protected ScrollBarWidth = 18;
@@ -88,7 +93,9 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     protected headerFixed = false;
 
     /** 是否显示命令字段 */
-    protected showCommandColumn = true;
+    get showCommandColumn() {
+        return true;
+    }
 
     /** 对显示的数据进行转换 */
     protected translate?: (items: T[]) => T[];
@@ -98,16 +105,12 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     protected gridView: GridView<T>;
 
 
-    private itemTable: HTMLTableElement;
-    private dialog: Dialog<T>;
-    private commandColumn: CustomField<T>;
-
     constructor(props: P) {
         super(props);
 
         if (this.showCommandColumn) {
             let it = this;
-            this.commandColumn = new CustomField<T>({
+            this.#commandColumn = new CustomField<T>({
                 headerText: "操作",
                 headerStyle: { textAlign: "center", width: `${this.CommandColumnWidth}px` },
                 itemStyle: { textAlign: "center", width: `${this.CommandColumnWidth}px` },
@@ -164,9 +167,9 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     componentDidMount() {
         this.columns = this.columns || [];
         this.gridView = createGridView({
-            element: this.itemTable,
+            element: this.#itemTable,
             dataSource: this.dataSource,
-            columns: this.commandColumn ? [...this.columns, this.commandColumn] : this.columns,
+            columns: this.#commandColumn ? [...this.columns, this.#commandColumn] : this.columns,
             pageSize: this.pageSize,
             translate: this.translate,
             showHeader: this.headerFixed != true,
@@ -191,7 +194,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
             return [];
         }
 
-        this.dialog = createItemDialog(this.dataSource, this.itemName || "", editor);
+        this.#dialog = createItemDialog(this.dataSource, this.itemName || "", editor);
         let addButton = this.addButton();
         let searchInput = this.searchControl();
         let r: JSX.Element[] = [];
@@ -208,7 +211,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     /** 获取页面添加按钮 */
     protected addButton() {
         let button = this.dataSource.canInsert ? <button key="btnAdd" className="btn btn-primary btn-sm"
-            onClick={() => this.dialog.show({} as T)}>
+            onClick={() => this.#dialog.show({} as T)}>
             <i className="fa fa-plus"></i>
             <span>添加</span>
         </button> : null;
@@ -256,7 +259,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
 
     /** 执行编辑操作 */
     protected executeEdit(dataItem: T) {
-        this.dialog.show(dataItem);
+        this.#dialog.show(dataItem);
     }
 
     /** 执行删除操作 */
@@ -318,26 +321,26 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
                                         return;
 
                                     e.style.width = col.itemStyle["width"] || "";
-                                    if (this.commandColumn == null && i == columns.length - 1) {
+                                    if (this.#commandColumn == null && i == columns.length - 1) {
                                         e.style.width = `calc(${e.style.width} + ${this.ScrollBarWidth}px)`
                                     }
 
                                 }}>{col.headerText}</th>
                             )}
-                            {this.commandColumn ? <th style={{ width: this.CommandColumnWidth + this.ScrollBarWidth }}>
-                                {this.commandColumn.headerText}
+                            {this.#commandColumn ? <th style={{ width: this.CommandColumnWidth + this.ScrollBarWidth }}>
+                                {this.#commandColumn.headerText}
                             </th> : null}
                         </tr>
                     </thead>
                 </table>
                 <div className={classNames.tableWrapper} style={{ height: `${tableSize.height}px`, width: `${tableSize.width}px` }}>
-                    <table ref={e => this.itemTable = e || this.itemTable}>
+                    <table ref={e => this.#itemTable = e || this.#itemTable}>
                     </table>
                 </div>
             </>
         }
 
-        return <table ref={e => this.itemTable = e || this.itemTable}>
+        return <table ref={e => this.#itemTable = e || this.#itemTable}>
 
         </table>
     }
