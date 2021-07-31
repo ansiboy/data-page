@@ -12,8 +12,13 @@ export interface Dialog<T> {
     show: (args: T) => void
 }
 
+export interface DialogTitles {
+    add: string
+    edit: string
+}
+
 export function createItemDialog<T>
-    (dataSource: DataSource<T>, name: string, child: React.ReactElement, beforeSave?: BeforeSave<T>): Dialog<T> {
+    (dataSource: DataSource<T>, dialogTitles: DialogTitles, child: React.ReactElement, beforeSave?: BeforeSave<T>): Dialog<T> {
 
     class ItemDialog extends React.Component<{}, { title?: string }> implements IItemDialog {
 
@@ -98,7 +103,7 @@ export function createItemDialog<T>
         setDataItem(dataItem: T) {
             this.dataItem = dataItem;
             let primaryValues = (dataSource.primaryKeys || []).map(key => dataItem[key]).filter(o => o);
-            let title = primaryValues.length > 0 ? `${strings.modify}${name}` : `${strings.add}${name}`;
+            let title = primaryValues.length > 0 ? dialogTitles.edit : dialogTitles.add;
 
             this.inputControls.forEach(c => {
                 let value = dataItem[c.props.dataField];

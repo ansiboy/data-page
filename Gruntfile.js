@@ -14,13 +14,25 @@ module.exports = function (grunt) {
                 options: {
                     failOnError: false
                 }
+            },
+            demo: {
+                command: "node-static demo",
+                options: {
+                    execOptions: {
+                        cwd: __dirname
+                    }
+                }
+            },
+            chrome: {
+                command: "start chrome http://127.0.0.1:45326",
             }
         },
+
     };
 
     grunt.initConfig(config);
 
-    grunt.registerTask('default', ['shell']);
-
+    grunt.registerTask('build', ['shell:src', "shell:webpack"]);
+    grunt.registerTask('demo', ["shell:chrome", "shell:demo"])
 
 }

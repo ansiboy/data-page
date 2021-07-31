@@ -7,7 +7,7 @@ virtualPaths["node_modules"] = path.join(__dirname, "../node_modules");
 virtualPaths["out"] = path.join(__dirname, "../out");
 /** @type {m.Settings} */
 let w = {
-    port: 4326,
+    port: 45326,
     virtualPaths
 }
 

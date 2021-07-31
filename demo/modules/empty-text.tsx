@@ -5,7 +5,11 @@ import { createDataSource, Person } from "../data-source";
 export default class extends DataListPage<Person> {
     dataSource = createDataSource();
     headerFixed = true;
-    showCommandColumn = true;
+
+    get showCommandColumn() {
+        return true;
+    }
+    
     columns = [
         this.boundField({
             dataField: "firstName", headerText: "名",
