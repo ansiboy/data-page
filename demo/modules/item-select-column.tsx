@@ -4,7 +4,11 @@ import { createDataSource, Person } from "../data-source";
 import * as React from "react";
 
 export default class extends DataListPage<Person> {
-    dataSource = createDataSource();
+
+    get dataSource() {
+        return createDataSource();
+    }
+
     get showSelectItemColumn() {
         return true;
     }
@@ -27,8 +31,8 @@ export default class extends DataListPage<Person> {
             }
         })
     ]
-    renderToolbarRight() {
-        let r = super.renderToolbarRight();
+    protected toolbarRightCommands() {
+        let r = super.toolbarRightCommands();
         r.unshift(...[
             <button key="btnTest" className="btn btn-primary btn-sm"
                 onClick={() => this.test()}>

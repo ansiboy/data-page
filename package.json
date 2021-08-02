@@ -1,10 +1,11 @@
 {
     "name": "maishu-data-page",
-    "version": "1.2.0",
+    "version": "1.2.2",
     "main": "dist/index.min.js",
     "types": "out/index.d.ts",
     "scripts": {
-        "build": "grunt build"
+        "build": "grunt build",
+        "start": "grunt demo"
     },
     "dependencies": {
         "maishu-chitu-react": "^1.30.0",

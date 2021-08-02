@@ -93,7 +93,12 @@ class SelectItemCell<T> extends GridViewCell {
         return this.#input.checked;
     }
     set checked(value: boolean) {
+        if (value == this.#input.checked) {
+            return;
+        }
+
         this.#input.checked = value;
+        this.changed.fire({ sender: this });
     }
 
 }
@@ -121,6 +126,10 @@ class SelectItemColumn<T> extends DataControlField<T> {
         return selectedItems;
     }
 
+    get cells() {
+        return this.#cells;
+    }
+
     createItemCell(dataItem: T, cellElement: HTMLElement) {
         let cell = new SelectItemCell(cellElement, dataItem);
         cell.style(this.itemStyle);
@@ -146,8 +155,9 @@ class SelectItemColumn<T> extends DataControlField<T> {
         ReactDOM.render(<><input type="checkbox" style={{ cursor: "pointer" }}
             ref={e => this.#allCheckbox = e || this.#allCheckbox}
             onChange={e => {
+                let checked = e.target.checked;
                 this.#cells.forEach(c => {
-                    c.checked = e.target.checked;
+                    c.checked = checked;
                 })
 
             }} /></>, cellElement);
@@ -173,7 +183,6 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     protected CommandColumnWidth = 140;
     protected ScrollBarWidth = 18;
 
-    abstract dataSource: DataSource<T>;
     abstract columns: DataControlField<T>[];
 
     get dialogTitles(): DialogTitles {
@@ -181,6 +190,10 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
             add: strings.add,
             edit: strings.modify,
         }
+    }
+
+    get dataSource(): DataSource<T> {
+        return null as any;
     }
 
     //============================================
@@ -211,6 +224,9 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     constructor(props: P) {
         super(props);
 
+        if (this.dataSource == null)
+            throw new Error(`Data source is null.`);
+
         if (this.showCommandColumn) {
             let it = this;
             this.#commandColumn = new CustomField<T>({
@@ -227,6 +243,14 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
                     </>, cell.element);
                     return cell;
                 }
+            });
+        }
+
+        if (this.showSelectItemColumn) {
+            this.#selectItemColumn = new SelectItemColumn<T>({
+                headerStyle: { width: "40px" },
+                itemStyle: { textAlign: "center", },
+                dataSource: this.dataSource,
             });
         }
 
@@ -279,7 +303,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
         </>
     }
 
-    protected renderToolbarRight(): JSX.Element[] {
+    protected toolbarRightCommands(): React.ReactElement<any, any>[] {
         let editor = this.renderEditor();
         if (editor == null) {
             return [];
@@ -389,11 +413,21 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
         return searchInput;
     }
 
+    /** @deprecated use itemRightCommands */
     protected rightCommands(dataItem: T): JSX.Element[] {
+        return this.itemRightCommands(dataItem);
+    }
+
+    /** @deprecated use itemLeftCommands */
+    protected leftCommands(dataItem: T): JSX.Element[] {
+        return this.itemLeftCommands(dataItem);
+    }
+
+    protected itemRightCommands(dataItem: T): JSX.Element[] {
         return [];
     }
 
-    protected leftCommands(dataItem: T): JSX.Element[] {
+    protected itemLeftCommands(dataItem: T): JSX.Element[] {
         return [];
     }
 
@@ -402,13 +436,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
             return;
 
         this.#itemTable = element || this.#itemTable;
-        if (this.showSelectItemColumn) {
-            this.#selectItemColumn = new SelectItemColumn<T>({
-                headerStyle: { width: "40px" },
-                itemStyle: { textAlign: "center", },
-                dataSource: this.dataSource,
-            });
-        }
+
 
         let columns = [...this.columns || []];
         if (this.#selectItemColumn) {
