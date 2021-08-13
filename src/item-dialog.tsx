@@ -18,7 +18,7 @@ export interface DialogTitles {
 }
 
 export function createItemDialog<T>
-    (dataSource: DataSource<T>, dialogTitles: DialogTitles, child: React.ReactElement, beforeSave?: BeforeSave<T>): Dialog<T> {
+    (dataSource: DataSource<T>, dialogTitles: DialogTitles, child: React.ReactElement, exec: "insert" | "update", beforeSave?: BeforeSave<T>): Dialog<T> {
 
     class ItemDialog extends React.Component<{}, { title?: string }> implements IItemDialog {
 
@@ -128,11 +128,14 @@ export function createItemDialog<T>
             }
 
             let primaryValues = dataSource.primaryKeys.map(o => dataItem[o]).filter(v => v != null);
-            if (primaryValues.length > 0) {
+            if (exec == "update") {
                 await dataSource.update(dataItem);
             }
-            else {
+            else if (exec == "insert") {
                 await dataSource.insert(dataItem);
+            }
+            else {
+                throw new Error(`Unknown exec method ${exec}.`);
             }
         }
 

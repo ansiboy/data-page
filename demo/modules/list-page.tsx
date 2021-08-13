@@ -3,7 +3,10 @@ import { rules } from "maishu-dilu-react";
 import { createDataSource, Person } from "../data-source";
 
 export default class extends DataListPage<Person> {
-    dataSource = createDataSource();
+    _dataSource = createDataSource();
+    get dataSource() {
+        return this._dataSource;
+    }
     columns = [
         this.boundField({
             dataField: "firstName", headerText: "名",

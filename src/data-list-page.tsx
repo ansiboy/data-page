@@ -175,7 +175,8 @@ export interface DataListPageState {
 export abstract class DataListPage<T, P extends PageProps = PageProps, S extends DataListPageState = DataListPageState> extends BasePage<P, S> {
 
     #itemTable: HTMLTableElement;
-    #dialog: Dialog<T>;
+    #insertDialog: Dialog<T>;
+    #updateDialog: Dialog<T>;
     #commandColumn: CustomField<T>;
     #selectItemColumn: SelectItemColumn<T>;
 
@@ -309,7 +310,8 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
             return [];
         }
 
-        this.#dialog = createItemDialog(this.dataSource, this.dialogTitles, editor);
+        this.#insertDialog = createItemDialog(this.dataSource, this.dialogTitles, editor, "insert");
+        this.#updateDialog = createItemDialog(this.dataSource, this.dialogTitles, editor, "update");
         let addButton = this.addButton();
         let searchInput = this.searchControl();
         let r: JSX.Element[] = [];
@@ -326,7 +328,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     /** 获取页面添加按钮 */
     protected addButton() {
         let button = this.dataSource.canInsert ? <button key="btnAdd" className="btn btn-primary btn-sm"
-            onClick={() => this.#dialog.show({} as T)}>
+            onClick={() => this.#insertDialog.show({} as T)}>
             <i className="fa fa-plus"></i>
             <span>{strings.add}</span>
         </button> : null;
@@ -374,7 +376,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
 
     /** 执行编辑操作 */
     protected executeEdit(dataItem: T) {
-        this.#dialog.show(dataItem);
+        this.#updateDialog.show(dataItem);
     }
 
     /** 执行删除操作 */

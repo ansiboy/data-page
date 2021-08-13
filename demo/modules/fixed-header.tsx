@@ -1,9 +1,18 @@
 import { DataListPage } from "../../out/index";
 import { rules } from "maishu-dilu-react";
 import { createDataSource, Person } from "../data-source";
+import { DataSource } from "maishu-toolkit";
 
 export default class extends DataListPage<Person> {
-    dataSource = createDataSource();
+    _dataSource: DataSource<Person>;
+
+    get dataSource() {
+        if (this._dataSource == null)
+            this._dataSource = createDataSource();
+
+        return this._dataSource;
+    }
+
     headerFixed = true;
     get showCommandColumn() {
         return true;

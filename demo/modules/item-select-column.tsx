@@ -2,11 +2,17 @@ import { DataListPage } from "../../out/index";
 import { rules } from "maishu-dilu";
 import { createDataSource, Person } from "../data-source";
 import * as React from "react";
+import { DataSource } from "maishu-toolkit";
 
 export default class extends DataListPage<Person> {
 
+    _dataSource: DataSource<Person>;
+
     get dataSource() {
-        return createDataSource();
+        if (this._dataSource == null)
+            this._dataSource = createDataSource();
+
+        return this._dataSource;
     }
 
     get showSelectItemColumn() {
