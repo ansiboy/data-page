@@ -181,8 +181,8 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     #selectItemColumn: SelectItemColumn<T>;
 
     /** 操作列宽度 */
-    protected CommandColumnWidth = 140;
-    protected ScrollBarWidth = 18;
+    private CommandColumnWidth = 140;
+    private ScrollBarWidth = 18;
 
     abstract columns: DataControlField<T>[];
 
@@ -215,6 +215,14 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
         return this.#selectItemColumn;
     }
 
+    get commandColumnWidth() {
+        return this.CommandColumnWidth;
+    }
+
+    get scrollBarWidth() {
+        return this.ScrollBarWidth;
+    }
+
     /** 对显示的数据进行转换 */
     protected translate?: (items: T[]) => T[];
     //============================================
@@ -232,8 +240,8 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
             let it = this;
             this.#commandColumn = new CustomField<T>({
                 headerText: "操作",
-                headerStyle: { textAlign: "center", width: `${this.CommandColumnWidth}px` },
-                itemStyle: { textAlign: "center", width: `${this.CommandColumnWidth}px` },
+                headerStyle: { textAlign: "center", width: `${this.commandColumnWidth}px` },
+                itemStyle: { textAlign: "center", width: `${this.commandColumnWidth}px` },
                 createItemCell(dataItem: T, cellElement) {
                     let cell = new GridViewCell(cellElement);
                     ReactDOM.render(<>
@@ -327,7 +335,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
 
     /** 获取页面添加按钮 */
     protected addButton() {
-        let button = this.dataSource.canInsert ? <button key="btnAdd" className="btn btn-primary btn-sm"
+        let button = this.dataSource.canInsert ? <button key="btnAdd" className="btn btn-primary"
             onClick={() => this.#insertDialog.show({} as T)}>
             <i className="fa fa-plus"></i>
             <span>{strings.add}</span>
@@ -406,7 +414,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
         let search = dataSource.options ? dataSource.options.search : null;
         let searchInput = search ? <>
             <input type="text" className="form-control pull-left input-sm" placeholder={search.placeholder || ""} style={{ width: 300 }}></input>
-            <button className="btn btn-primary btn-sm">
+            <button className="btn btn-primary">
                 <i className="fa fa-search"></i>
                 <span>{strings.search}</span>
             </button>
@@ -475,12 +483,12 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
 
                                     e.style.width = col.itemStyle["width"] || "";
                                     if (this.#commandColumn == null && i == columns.length - 1) {
-                                        e.style.width = `calc(${e.style.width} + ${this.ScrollBarWidth}px)`
+                                        e.style.width = `calc(${e.style.width} + ${this.scrollBarWidth}px)`
                                     }
 
                                 }}>{col.headerText}</th>
                             )}
-                            {this.#commandColumn ? <th style={{ width: this.CommandColumnWidth + this.ScrollBarWidth }}>
+                            {this.#commandColumn ? <th style={{ width: this.commandColumnWidth + this.scrollBarWidth }}>
                                 {this.#commandColumn.headerText}
                             </th> : null}
                         </tr>
