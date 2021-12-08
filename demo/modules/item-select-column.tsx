@@ -40,7 +40,7 @@ export default class extends DataListPage<Person> {
     protected toolbarRightCommands() {
         let r = super.toolbarRightCommands();
         r.unshift(...[
-            <button key="btnTest" className="btn btn-primary btn-sm"
+            <button key="btnTest" className="btn btn-primary"
                 onClick={() => this.test()}>
                 <i className="fa fa-plus"></i>
                 <span>TEST</span>

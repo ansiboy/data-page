@@ -183,6 +183,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     /** 操作列宽度 */
     private CommandColumnWidth = 140;
     private ScrollBarWidth = 18;
+    private tableHeader: HTMLElement;
 
     abstract columns: DataControlField<T>[];
 
@@ -264,38 +265,28 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
         }
 
         window.addEventListener("resize", () => {
-            let height = window.innerHeight - 160;
-            let width = window.innerWidth - 80;
-            let firstMenuPanel = document.getElementsByClassName("first")[0] as HTMLElement;
-            let secondMenuPanel = document.getElementsByClassName("second")[0] as HTMLElement;
-            if (firstMenuPanel) {
-                width = width - firstMenuPanel.offsetWidth;
-            }
-            if (secondMenuPanel) {
-                width = width - secondMenuPanel.offsetWidth;
+
+            if (this.tableHeader != null) {
+                let tableSize = this.calcTableSize();
+                this.setState({ tableSize });
             }
 
-            let tableSize: DataListPageState["tableSize"];
-            if (this.state != null) {
-                tableSize = this.state.tableSize;
-            }
-            if (tableSize == null || tableSize.height != height || tableSize.width != width) {
-                this.setState({ tableSize: { width, height } });
-            }
         })
     }
 
     calcTableSize() {
+        console.assert(this.tableHeader != null);
+        let rect = this.tableHeader.getBoundingClientRect();
         let height = window.innerHeight - 160;
-        let width = window.innerWidth - 40;
-        let firstMenuPanel = document.getElementsByClassName("first")[0] as HTMLElement;
-        let secondMenuPanel = document.getElementsByClassName("second")[0] as HTMLElement;
-        if (firstMenuPanel) {
-            width = width - firstMenuPanel.offsetWidth;
-        }
-        if (secondMenuPanel) {
-            width = width - secondMenuPanel.offsetWidth;
-        }
+        let width = rect.width; //window.innerWidth - 40;
+        // let firstMenuPanel = document.getElementsByClassName("first")[0] as HTMLElement;
+        // let secondMenuPanel = document.getElementsByClassName("second")[0] as HTMLElement;
+        // if (firstMenuPanel) {
+        //     width = width - firstMenuPanel.offsetWidth;
+        // }
+        // if (secondMenuPanel) {
+        //     width = width - secondMenuPanel.offsetWidth;
+        // }
 
         return { width, height };
     }
@@ -336,7 +327,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     /** 获取页面添加按钮 */
     protected addButton() {
         let button = this.dataSource.canInsert ? <button key="btnAdd" className="btn btn-primary"
-            onClick={() => this.#insertDialog.show({} as T)}>
+            onClick={() => this.executeAdd()}>
             <i className="fa fa-plus"></i>
             <span>{strings.add}</span>
         </button> : null;
@@ -408,6 +399,11 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
         return this.dataSource.delete(dataItem);
     }
 
+    /** 执行添加操作 */
+    protected executeAdd() {
+        this.#insertDialog.show({} as T);
+    }
+
     /** 获取页面搜索栏 */
     protected searchControl() {
         let dataSource = this.dataSource as PageDataSource<T>;
@@ -468,11 +464,22 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
     }
 
     render() {
-        let tableSize = (this.state?.tableSize || this.calcTableSize()) as ReturnType<DataListPage<any, any>["calcTableSize"]>;
+        let tableSize = this.state?.tableSize;
         if (this.headerFixed) {
             let columns = (this.columns || []).filter(o => o.visible);
             return <>
-                <table className="table table-striped table-bordered table-hover" style={{ margin: 0 }}    >
+                <table className="table table-striped table-bordered table-hover" style={{ margin: 0 }}
+                    ref={e => {
+                        if (!e) return;
+                        this.tableHeader = e || this.tableHeader;
+                        if (this.tableHeader != null && tableSize == null) {
+                            setTimeout(() => {
+                                let size = this.calcTableSize()
+                                this.setState({ tableSize: size });
+                            }, 300)
+                        }
+
+                    }}   >
                     <thead>
                         <tr>
                             {columns.map((col, i) =>
@@ -494,7 +501,7 @@ export abstract class DataListPage<T, P extends PageProps = PageProps, S extends
                         </tr>
                     </thead>
                 </table>
-                <div className={classNames.tableWrapper} style={{ height: `${tableSize.height}px`, width: `${tableSize.width}px` }}>
+                <div className={classNames.tableWrapper} style={tableSize ? { height: `${tableSize.height}px` } : {}}>
                     <table ref={(e: HTMLTableElement) => this.tableRef(e)}>
                     </table>
                 </div>

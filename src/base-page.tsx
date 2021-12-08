@@ -29,7 +29,7 @@ export abstract class BasePage<P extends PageProps, S = {}> extends React.Compon
                     <li key={i} className="pull-left">{o}</li>
                 )}
                 <li className="pull-right">
-                    <button className="btn btn-primary btn-sm" style={{ display: this.backButtonVisiable ? "" : "none" }}
+                    <button className="btn btn-primary" style={{ display: this.backButtonVisiable ? "" : "none" }}
                         onClick={() => this.props.app.back()}>
                         <i className="fa fa-reply"></i>
                         <span>{strings.back}</span>
