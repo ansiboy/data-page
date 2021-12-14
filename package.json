@@ -18,8 +18,10 @@
         "react-dom": "^17.0.2"
     },
     "devDependencies": {
+        "@babel/plugin-proposal-decorators": "^7.16.5",
         "@babel/plugin-syntax-typescript": "^7.12.13",
         "@babel/plugin-transform-modules-amd": "^7.13.0",
+        "@babel/plugin-transform-react-jsx": "^7.16.5",
         "@babel/plugin-transform-typescript": "^7.13.0",
         "@babel/preset-env": "^7.13.12",
         "@types/react": "^17.0.3",
@@ -28,7 +30,6 @@
         "grunt-shell": "^2.1.0",
         "load-grunt-tasks": "^4.0.0",
         "maishu-admin-scaffold": "^1.5.0",
-        "maishu-node-mvc": "^2.18.2",
         "webpack": "^4.30.0",
         "webpack-cli": "^3.3.0"
     },

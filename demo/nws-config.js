@@ -1,4 +1,4 @@
-const m = require("maishu-node-mvc");
+// const m = require("maishu-node-mvc");
 const { getVirtualPaths } = require("maishu-admin-scaffold");
 const path = require("path");
 
